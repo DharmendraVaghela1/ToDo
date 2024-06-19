@@ -2,6 +2,8 @@ package com.example.todo
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.SpannableString
+import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,29 +44,48 @@ class NoteRVAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // on below line we are setting data to item of recycler view.
         val currentNote = allNotes[position]
-        holder.noteTV.setText(allNotes.get(position).noteTitle)
-        holder.dateTV.setText("Last Updated : " + allNotes.get(position).timeStamp)
-        // on below line we are adding click listener to our delete image view icon.
 
-
-        // on below line we are adding click listener
-        // to our recycler view item.
-        holder.itemView.setOnClickListener {
-            // on below line we are calling a note click interface
-            // and we are passing a position to it.
-            noteClickInterface.onNoteClick(allNotes.get(position))
-        }
-        val isChecked = sharedPreferences.getBoolean("checkbox_state_${allNotes.get(position).id}", false)
+        // Retrieve the checkbox state from SharedPreferences
+        val isChecked = sharedPreferences.getBoolean("checkbox_state_${currentNote.id}", false)
         holder.noteCheckBox.isChecked = isChecked
 
+        // Apply or remove strikethrough effect based on checkbox state
+        if (isChecked) {
+            val spannableString = SpannableString(currentNote.noteTitle)
+            spannableString.setSpan(StrikethroughSpan(), 0, spannableString.length, 0)
+            holder.noteTV.text = spannableString
+        } else {
+            holder.noteTV.text = currentNote.noteTitle
+        }
+
+        // Save checkbox state when it changes
+        holder.noteCheckBox.setOnCheckedChangeListener(null) // Avoid listener trigger during initialization
         holder.noteCheckBox.setOnCheckedChangeListener { _, isChecked ->
             // Save checkbox state to SharedPreferences
             editor.putBoolean("checkbox_state_${currentNote.id}", isChecked)
             editor.apply()
+
+            // Apply or remove strikethrough effect based on checkbox state
+            if (isChecked) {
+                val spannableString = SpannableString(currentNote.noteTitle)
+                spannableString.setSpan(StrikethroughSpan(), 0, spannableString.length, 0)
+                holder.noteTV.text = spannableString
+            } else {
+                holder.noteTV.text = currentNote.noteTitle
+            }
+        }
+
+        // Set other views
+        holder.dateTV.text = "Last Updated: " + currentNote.timeStamp
+
+        // Set click listener to handle item click
+        holder.itemView.setOnClickListener {
+            noteClickInterface.onNoteClick(currentNote)
         }
     }
+
+
 
     override fun getItemCount(): Int {
         // on below line we are

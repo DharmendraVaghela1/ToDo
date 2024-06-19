@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), NoteClickInterface, NoteClickDeleteInt
 
     lateinit var viewModal: NoteViewModal
     lateinit var notesRV: RecyclerView
-    lateinit var addFAB: ExtendedFloatingActionButton
+    private lateinit var addFAB: ExtendedFloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
