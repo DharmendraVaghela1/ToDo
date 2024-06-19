@@ -46,16 +46,17 @@ class NoteRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentNote = allNotes[position]
 
-        // Retrieve the checkbox state from SharedPreferences
+        // Retrieve the stored checkbox state from SharedPreferences
         val isChecked = sharedPreferences.getBoolean("checkbox_state_${currentNote.id}", false)
-        holder.noteCheckBox.isChecked = isChecked
 
-        // Apply or remove strikethrough effect based on checkbox state
+        // Set the checkbox state only for new tasks, leave existing tasks unchanged
         if (isChecked) {
+            holder.noteCheckBox.isChecked = true
             val spannableString = SpannableString(currentNote.noteTitle)
             spannableString.setSpan(StrikethroughSpan(), 0, spannableString.length, 0)
             holder.noteTV.text = spannableString
         } else {
+            holder.noteCheckBox.isChecked = false
             holder.noteTV.text = currentNote.noteTitle
         }
 
@@ -84,8 +85,6 @@ class NoteRVAdapter(
             noteClickInterface.onNoteClick(currentNote)
         }
     }
-
-
 
     override fun getItemCount(): Int {
         // on below line we are
