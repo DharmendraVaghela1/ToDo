@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="hintTextColor">#FAF7F7</color>
+    <color name="my_dark_primary">#E91E63</color>
+    <color name="my_dark_primary_variant">#FFEB3B</color>
+    <color name="my_dark_on_primary">@color/white</color>
+</resources>
